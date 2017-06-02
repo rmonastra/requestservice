@@ -8,6 +8,7 @@ var useragent = require('express-useragent'); //module to collect web browser, o
 var app = module.exports = express();
 app.use(bodyParser.json());
 app.use(cors());
+app.use(cors({ optionSuccessStatus: 200 })); //get around browsers who have trouble with 204
 app.use(useragent.express());
 
 //API
@@ -15,14 +16,13 @@ var api = '/api/whoami';
 //Function & variables to retrieve user info
 app.get(api, function(req, res, next) {
     var language = req.acceptsLanguages();
-    var software = 'Operating System: ' + req.useragent.os + ', Browser: ' + req.useragent.browser;
+    var software = "Operating system: " + req.useragent.os + ", Browser: " + req.useragent.browser;
     var ip = req.ip;
     //responds with data in JSON format
-    res.json({ 'ip': ip, 'language': language[0], 'software': software })
+    res.json({ 'ip': ip, 'language': language, 'software': software })
 });
 //path for connection
 app.listen(3000, function() {
     console.log("Listening on port: 3000");
 });
 //allows this code/file to be used by other files
-module.exports = app;
